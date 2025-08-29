@@ -14,26 +14,28 @@ const config = {
 
 var gameInstance;
 var canvas;
-
 window.addEventListener('load', function() {
     canvas = document.querySelector("#unity-canvas");
-    
-createUnityInstance(canvas, config, (progress) => {
-    const progressBar = document.querySelector("#unity-progress-bar-full");
-    progressBar.style.width = (100 * progress) + "%";
-    console.log('Loading:', Math.round(progress * 100) + '%');
-}).then((instance) => {
-    document.querySelector("#unity-loading-bar").style.display = "none";
-    gameInstance = instance;
-    console.log("Unity game loaded successfully");
-    testNutakuIntegration();
-});
-});
 
+    createUnityInstance(canvas, config, (progress) => {
+        console.log('Loading progress:', progress);
+        // Можно добавить progress bar
+    }).then((instance) => {
+        gameInstance = instance;
+        console.log("Unity game loaded successfully");
+
+        // Тестирование Nutaku интеграции после загрузки игры
+        testNutakuIntegration();
+
+    }).catch((message) => {
+        console.error("Failed to load Unity:", message);
+        alert("Failed to load game: " + message);
+    });
+});
 function testNutakuIntegration() {
     if (typeof NutakuGI !== 'undefined') {
         console.log('Nutaku GI2 integration available');
-        
+
         // Получить информацию о пользователе
         NutakuGI.getQuickUserInfo().then(result => {
             if (!result.error) {
@@ -49,6 +51,13 @@ function testNutakuIntegration() {
     }
 }
 
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // вызвать при старте
+
 </script>
 
     <body style="min-height: 1080px">
@@ -57,7 +66,7 @@ function testNutakuIntegration() {
             <div class="mainRight"></div>
             <div class="webgl-content" id="webglcontent" style="min-height: 1080px">
                 <div id="unity-container"  class="unity-desktop">
-                    <canvas id="unity-canvas"></canvas>
+                    <canvas id="unity-canvas" width="1920" height="1080" style="width:100%; height:100%;"></canvas>
                 </div>
                 <div id="LogoBG" class="Logos LogoBG"></div>
                 <div id="LogoA"  class="Logos LogoA"></div>
@@ -67,26 +76,3 @@ function testNutakuIntegration() {
         </div>
     </body>
 
-
-    <style>
-#unity-loading-bar {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-}
-#unity-progress-bar-empty {
-    width: 100%;
-    height: 18px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 2px;
-}
-#unity-progress-bar-full {
-    width: 0%;
-    height: 100%;
-    background: #8cc8ff;
-    border-radius: 2px;
-    transition: width 0.1s;
-}
-</style>
