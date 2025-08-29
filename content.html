@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="https://ReusZ11.github.io/LH_WebGLTest/TemplateData/style.css">
+<script src="https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.loader.js"></script>
+<script type="text/javascript">
+
+const config = {
+    dataUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.data.gz",
+    frameworkUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.framework.js.gz",
+    codeUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.wasm.gz",
+    streamingAssetsUrl: "https://ReusZ11.github.io/LustHorizon_WEB/StreamingAssets",
+    companyName: "Your Company",
+    productName: "LH WebGL Test",
+    productVersion: "1.0",
+};
+
+var gameInstance;
+var canvas;
+
+window.addEventListener('load', function() {
+    canvas = document.querySelector("#unity-canvas");
+    
+    createUnityInstance(canvas, config, (progress) => {
+        console.log('Loading progress:', progress);
+        // Можно добавить progress bar
+    }).then((instance) => {
+        gameInstance = instance;
+        console.log("Unity game loaded successfully");
+        
+        // Тестирование Nutaku интеграции после загрузки игры
+        testNutakuIntegration();
+        
+    }).catch((message) => {
+        console.error("Failed to load Unity:", message);
+        alert("Failed to load game: " + message);
+    });
+});
+
+function testNutakuIntegration() {
+    if (typeof NutakuGI !== 'undefined') {
+        console.log('Nutaku GI2 integration available');
+        
+        // Получить информацию о пользователе
+        NutakuGI.getQuickUserInfo().then(result => {
+            if (!result.error) {
+                console.log('Nutaku user:', result.nickname);
+                // Отправить данные в Unity если нужно
+                if (gameInstance) {
+                    gameInstance.SendMessage('GameManager', 'OnNutakuUser', JSON.stringify(result));
+                }
+            }
+        });
+    } else {
+        console.log('Running outside Nutaku platform');
+    }
+}
+
+</script>
+
+<body style="min-height: 600px; margin: 0;">
+    <div class="webgl-content" style="min-height: 600px;">
+        <div id="unity-container" class="unity-desktop" style="width: 960px; height: 600px;">
+            <canvas id="unity-canvas"></canvas>
+            <div id="unity-loading-bar">
+                <div id="unity-progress-bar-empty">
+                    <div id="unity-progress-bar-full"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
