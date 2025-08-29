@@ -44,7 +44,7 @@ function testNutakuIntegration() {
                 console.log('Nutaku user:', result.nickname);
                 // Отправить данные в Unity если нужно
                 if (gameInstance) {
-                    gameInstance.SendMessage('GameManager', 'OnNutakuUser', JSON.stringify(result));
+                    gameInstance.SendMessage('NutakuService', 'OnNutakuUser', JSON.stringify(result));
                 }
             }
         });
