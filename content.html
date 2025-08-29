@@ -3,9 +3,9 @@
 <script type="text/javascript">
 
 const config = {
-    dataUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.data.br",
-    frameworkUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.framework.js.br",
-    codeUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.wasm.br",
+    dataUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.data",
+    frameworkUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.framework.js",
+    codeUrl: "https://ReusZ11.github.io/LH_WebGLTest/Build/LustHorizon_WEB.wasm",
     streamingAssetsUrl: "https://ReusZ11.github.io/LustHorizon_WEB/StreamingAssets",
     companyName: "Your Company",
     productName: "LH WebGL Test",
@@ -44,7 +44,7 @@ function testNutakuIntegration() {
                 console.log('Nutaku user:', result.nickname);
                 // Отправить данные в Unity если нужно
                 if (gameInstance) {
-                    gameInstance.SendMessage('GameManager', 'OnNutakuUser', JSON.stringify(result));
+                    gameInstance.SendMessage('NutakuService', 'OnNutakuUser', JSON.stringify(result));
                 }
             }
         });
